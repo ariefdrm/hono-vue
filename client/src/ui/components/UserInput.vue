@@ -4,10 +4,13 @@ const props = defineProps<{
   placeholder: string
   required?: boolean | false
 }>()
+
+const modelValue = defineModel<string>('value')
 </script>
 
 <template>
   <input
+    v-model="modelValue"
     class="border rounded-md border-gray-400 p-1 block w-[430px] h-[60px]"
     :type="props.type"
     :placeholder="props.placeholder"

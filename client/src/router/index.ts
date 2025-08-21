@@ -1,4 +1,5 @@
 import MainPage from '@/pages/MainPage.vue'
+import RegisterPage from '@/pages/RegisterPage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -13,6 +14,11 @@ const router = createRouter({
       path: '/login',
       name: 'login-page',
       component: () => import('@/pages/LoginPage.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register-page',
+      component: RegisterPage,
     },
     {
       path: '/:catchAll(.*)',
