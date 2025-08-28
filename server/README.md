@@ -74,6 +74,8 @@ This document provides documentation for the API endpoints in the server.
 *   **Endpoint:** `DELETE /logout/:email`
 *   **Method:** `DELETE`
 *   **Description:** Logs out a user.
+*   **Headers:**
+    *   `Authorization` (string, required): The user's authentication token (e.g., `Bearer <token>`).
 *   **URL Parameters:**
     *   `email` (string, required): The email of the user to log out.
 *   **Success Response:**
