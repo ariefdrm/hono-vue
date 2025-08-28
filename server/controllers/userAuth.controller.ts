@@ -4,6 +4,7 @@ import "../config/passport.config.ts.bak";
 import pool from "../config/db.config.js";
 import { generateToken } from "../utils/generateToken.js";
 import z from "zod";
+import auth from "../routes/auth.route";
 
 export default class UserAuthController {
   /* static async getAllUsers(c: Context) {
@@ -92,8 +93,34 @@ export default class UserAuthController {
       message: "User logged in successfully",
       user: {
         email: response.rows[0].email,
-        token: response.rows[0].token,
+        token,
       },
     });
+  }
+
+  static async logoutUser(c: Context) {
+    const body = c.req.param();
+
+    // declare schema
+    const schema = z.object({
+      email: z.email(),
+    });
+
+    // parsing data
+    const parsed = schema.safeParse(body);
+    if (!parsed.success) return c.json({ error: parsed.error });
+
+    const { email } = parsed.data;
+
+    try {
+      await pool.query("UPDATE users SET token = $1 WHERE email = $2;", [
+        null,
+        email,
+      ]);
+
+      return c.json({ message: "User logged out successfully" }, 200);
+    } catch (e: any) {
+      return c.json({ message: "User not found" }, 404);
+    }
   }
 }

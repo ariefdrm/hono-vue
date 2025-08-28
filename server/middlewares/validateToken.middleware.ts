@@ -1,18 +1,17 @@
 import { Context, Next } from "hono";
-import { getUserToken } from "../utils/getUserToken";
+import pool from "../config/db.config";
 
 export async function validateToken(c: Context, next: Next) {
-  const authorization = c.req.header("Authorization");
-  const token = authorization?.split(" ")[1] as string;
-  const email = await getUserToken(token);
+  const token = c.req.header("Authorization")?.replace("Bearer ", "");
+  if (!token) return c.json({ message: "No token provided" }, 401);
 
-  if (!authorization) {
-    return c.json({ message: "Unauthorized" }, 401);
-  }
+  const result = await pool.query("SELECT * FROM USERS WHERE token = $1", [
+    token,
+  ]);
 
-  if (authorization !== email) {
-    return c.json({ message: "Unauthorized" }, 401);
-  }
+  const users = result.rows[0];
+  if (!users) return c.json({ message: "Invalid token" }, 401);
 
-  next();
+  c.set("user", users);
+  await next();
 }
