@@ -53,7 +53,9 @@ export default class UserAuthController {
 
     const schema = z.object({
       email: z.email(),
-      password: z.string().min(5),
+      password: z
+        .string()
+        .min(5, { error: "Password must be at least 5 characters long" }),
     });
 
     const parsed = schema.safeParse(body);

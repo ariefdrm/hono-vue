@@ -10,7 +10,7 @@ export async function validateToken(c: Context, next: Next) {
   ]);
 
   const users = result.rows[0];
-  if (!users) return c.json({ message: "Invalid token" }, 401);
+  if (!users) return c.json({ message: "You don't have access" }, 401);
 
   c.set("user", users);
   await next();
