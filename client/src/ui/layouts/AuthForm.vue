@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { useAuthStore } from '@/stores/user.store'
 import SubmitButtons from '../components/SubmitButtons.vue'
 import UserInput from '../components/UserInput.vue'
-import type User from '@/utils/user.interface'
 
-const state = reactive<User>({
-  email: '',
-  password: '',
-})
+const user = useAuthStore()
 
 const props = defineProps<{
   headingMessage: string
@@ -15,25 +11,28 @@ const props = defineProps<{
   pathName?: string
   message: string
   messagePath: string
+  testing: string
 }>()
+
+function handleSubmit() {
+  console.log('submit....' + props.testing)
+}
 </script>
 
 <template>
-  <div class="border shadow-lg rounded-md mx-1 my-8 p-10 h-[450px] w-[510px]">
+  <form class="border shadow-lg rounded-md mx-1 my-8 p-10 h-[450px] w-[510px]">
     <h2 class="text-5xl text-center font-semibold mb-10">{{ props.headingMessage }}</h2>
 
-    <div class="flex flex-col gap-8">
-      <UserInput v-model:value="state.email" placeholder="Email" type="email" />
-      <UserInput v-model:value="state.password" placeholder="Password" type="password" />
+    <div class="flex flex-col gap-8 mb-4">
+      <UserInput v-model:value="user.email" placeholder="Email" type="email" />
+      <UserInput v-model:value="user.password" placeholder="Password" type="password" />
     </div>
-    <SubmitButtons class="mt-8 mb-4 text-xl"
-      ><template #message>{{ props.submitMessage }}</template></SubmitButtons
-    >
+    <SubmitButtons @submit="handleSubmit" :message="props.submitMessage" />
     <p class="text-center text-lg">
       {{ message }}
       <RouterLink class="text-blue-300" :to="{ path: pathName }"
         >{{ messagePath }} here...</RouterLink
       >
     </p>
-  </div>
+  </form>
 </template>

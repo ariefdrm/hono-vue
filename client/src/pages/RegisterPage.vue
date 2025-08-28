@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import LoginLayouts from '@/ui/layouts/LoginLayouts.vue'
-import { provide } from 'vue'
-
-provide('email', 'password')
+import AuthForm from '@/ui/layouts/AuthForm.vue'
 </script>
 
 <template>
-  <form class="flex justify-center items-center">
-    <LoginLayouts
+  <form @submit.prevent="" class="flex justify-center items-center">
+    <AuthForm
       heading-message="Register"
-      submit-message="register"
+      submit-message="Register"
       path-name="/login"
       message="Already have an account?"
       message-path="Login"
-    />
+    >
+    </AuthForm>
   </form>
 </template>

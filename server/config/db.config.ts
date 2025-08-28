@@ -1,16 +1,20 @@
-import { Pool } from "pg";
+import { Client } from "pg";
 import "dotenv/config";
 
-export const pool = new Pool({
+const pool = new Client({
   host: "localhost",
   user: process.env.DB_USER,
   database: process.env.DB_DATABASE,
   port: Number(process.env.DB_PORT),
 });
 
-export function connect() {
+function connect() {
   pool
     .connect()
     .then(() => console.log("Database connected"))
     .catch((err) => console.log(err));
 }
+
+connect();
+
+export default pool;

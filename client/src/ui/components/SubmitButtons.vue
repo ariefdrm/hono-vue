@@ -1,5 +1,11 @@
+<script setup lang="ts">
+defineProps<{ message?: string }>()
+
+defineEmits(['submit'])
+</script>
+
 <template>
-  <button class="block w-full h-[60px] bg-gray-400 rounded-sm py-0.5">
-    <slot class="text-2xl" name="message"></slot>
+  <button @click="$emit('submit')" class="block w-full h-[60px] rounded-sm py-0.5 bg-blue-300">
+    {{ message }}
   </button>
 </template>
