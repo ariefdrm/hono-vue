@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavLink from './ui/components/NavLink.vue'
+import NavLink from './components/atoms/NavLink.vue'
 </script>
 
 <template>

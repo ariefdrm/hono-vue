@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/user.store'
-import SubmitButtons from '../components/SubmitButtons.vue'
-import UserInput from '../components/UserInput.vue'
+import UserInput from '../atoms/UserInput.vue'
+import SubmitButtons from '../atoms/SubmitButtons.vue'
 
 const user = useAuthStore()
 
@@ -27,6 +27,7 @@ function handleSubmit() {
       <UserInput v-model:value="user.email" placeholder="Email" type="email" />
       <UserInput v-model:value="user.password" placeholder="Password" type="password" />
     </div>
+
     <SubmitButtons @submit="handleSubmit" :message="props.submitMessage" />
     <p class="text-center text-lg">
       {{ message }}
