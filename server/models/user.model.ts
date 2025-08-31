@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { pool } from "../config/db.config";
+import pool from "../config/db.config";
 
 export interface User {
   id?: number;
@@ -7,11 +7,15 @@ export interface User {
   password: string;
 }
 
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (
+  email: string,
+  password: string,
+  token: string,
+) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await pool.query(
     "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
-    [email, hashedPassword],
+    [email, hashedPassword, token],
   );
   return result.rows[0];
 };

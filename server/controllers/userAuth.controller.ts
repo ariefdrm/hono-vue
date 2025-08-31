@@ -1,6 +1,5 @@
 import { Context } from "hono";
 import bcrypt from "bcrypt";
-import "../config/passport.config.ts.bak";
 import pool from "../config/db.config.js";
 import { generateToken } from "../utils/generateToken.js";
 import z from "zod";
@@ -39,7 +38,7 @@ export default class UserAuthController {
       return c.json(
         {
           message: "User registered successfully",
-          user: result.rows[0],
+          data: result.rows[0],
         },
         201,
       );
@@ -92,7 +91,7 @@ export default class UserAuthController {
     // return user
     return c.json({
       message: "User logged in successfully",
-      user: {
+      data: {
         email: response.rows[0].email,
         token,
       },

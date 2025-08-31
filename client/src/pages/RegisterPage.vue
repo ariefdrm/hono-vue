@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AuthForm from '@/components/layouts/AuthForm.vue'
+import AuthForm from '@/components/molecules/AuthForm.vue'
 </script>
 
 <template>
@@ -10,7 +10,6 @@ import AuthForm from '@/components/layouts/AuthForm.vue'
       path-name="/login"
       message="Already have an account?"
       message-path="Login"
-      testing="hello"
     >
     </AuthForm>
   </form>
