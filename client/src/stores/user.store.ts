@@ -4,7 +4,7 @@ import type User from '@/utils/user.interface'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-interface dataFetch {
+interface LoginResponse {
   message: string
   data: User
 }
@@ -12,13 +12,25 @@ interface dataFetch {
 export const useAuthStore = defineStore('auth', () => {
   const email = ref('')
   const password = ref('')
-  const token = ref('')
+  const token = localStorage.getItem('token')
 
   async function login() {
-    const response = await api.post<dataFetch>('/auth/login', { email, password })
+    try {
+      const response = await api.post<LoginResponse>('/auth/login', {
+        email: email.value,
+        password: password.value,
+      })
+      localStorage.setItem('token', response.data.data.token)
 
-    localStorage.setItem('token', response.data.data.token)
-    return router.push({ name: 'home-page' })
+      if (response.status == 200) {
+        email.value = ''
+        password.value = ''
+      }
+
+      router.push('/')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return { email, password, token, login }
