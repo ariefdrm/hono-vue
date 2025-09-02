@@ -16,16 +16,23 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login() {
     try {
-      const response = await api.post<LoginResponse>('/auth/login', {
-        email: email.value,
-        password: password.value,
-      })
+      const response = await api.post<LoginResponse>(
+        '/auth/login',
+        {
+          email: email.value,
+          password: password.value,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
       localStorage.setItem('token', response.data.data.token)
 
-      if (response.status == 200) {
-        email.value = ''
-        password.value = ''
-      }
+      // set email and password to empty
+      email.value = ''
+      password.value = ''
 
       router.push('/')
     } catch (error) {
@@ -33,5 +40,32 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { email, password, token, login }
+  async function register() {
+    try {
+      const response = await api.post<LoginResponse>(
+        '/auth/register',
+        {
+          email: email.value,
+          password: password.value,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+
+      console.log(response.data)
+
+      // set email and password to empty
+      email.value = ''
+      password.value = ''
+
+      router.push('/login')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return { email, password, token, login, register }
 })

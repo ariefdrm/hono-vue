@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AuthForm from '@/components/molecules/AuthForm.vue'
+import LoginForm from '@/components/molecules/LoginForm.vue'
 import { useAuthStore } from '@/stores/user.store'
 
 const user = useAuthStore()
@@ -7,7 +7,7 @@ const user = useAuthStore()
 
 <template>
   <div class="flex justify-center items-center">
-    <AuthForm
+    <LoginForm
       heading-message="Login"
       submit-message="Login"
       path-name="/register"

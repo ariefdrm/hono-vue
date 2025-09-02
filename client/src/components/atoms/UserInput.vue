@@ -15,5 +15,6 @@ const modelValue = defineModel<string>('value')
     :type="props.type"
     :placeholder="props.placeholder"
     :required="props.required"
+    autocomplete="on"
   />
 </template>

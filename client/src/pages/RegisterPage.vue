@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import AuthForm from '@/components/molecules/AuthForm.vue'
+import RegisterForm from '@/components/molecules/RegisterForm.vue'
 </script>
 
 <template>
   <form @submit.prevent="" class="flex justify-center items-center">
-    <AuthForm
+    <RegisterForm
       heading-message="Register"
       submit-message="Register"
       path-name="/login"
       message="Already have an account?"
       message-path="Login"
     >
-    </AuthForm>
+    </RegisterForm>
   </form>
 </template>
