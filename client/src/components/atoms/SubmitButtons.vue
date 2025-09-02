@@ -1,5 +1,8 @@
 <script setup lang="ts">
-defineProps<{ message?: string }>()
+defineProps<{
+  message?: string
+  types?: 'button' | 'submit'
+}>()
 
 defineEmits(['submit'])
 </script>

@@ -7,7 +7,7 @@ const props = defineProps<{
 
 <template>
   <RouterLink
-    class="text-lg bg-blue-300 rounded-4xl py-2 px-4 hover:bg-blue-200 hover:duration-100"
+    class="text-lg bg-blue-300 rounded-4xl py-2 px-4 hover:bg-blue-200 hover:duration-100 opacity-70"
     :to="{ name: props.namePath }"
     >{{ message }}</RouterLink
   >

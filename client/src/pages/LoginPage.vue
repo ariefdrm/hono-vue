@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import AuthForm from '@/components/layouts/AuthForm.vue'
+import LoginForm from '@/components/molecules/LoginForm.vue'
+import { useAuthStore } from '@/stores/user.store'
+
+const user = useAuthStore()
 </script>
 
 <template>
   <div class="flex justify-center items-center">
-    <AuthForm
+    <LoginForm
       heading-message="Login"
       submit-message="Login"
       path-name="/register"
       message="Don't have an account?"
       message-path="Register"
-      testing="testing"
+      :handle-submit="user.login"
     />
   </div>
 </template>
