@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { validateToken } from "../middlewares/validateToken.middleware";
 import z from "zod";
 import bcrypt from "bcrypt";
 import pool from "../config/db.config";
 import { generateToken } from "../utils/generateToken";
+import { validateToken } from "../middlewares/validateToken.middleware";
 
 const auth = new Hono();
 

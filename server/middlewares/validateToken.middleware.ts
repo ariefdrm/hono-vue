@@ -1,8 +1,7 @@
-import { Context, Next } from "hono";
 import pool from "../config/db.config";
-import { verify } from "hono/jwt";
+import { createMiddleware } from "hono/factory";
 
-export async function validateToken(c: Context, next: Next) {
+export const validateToken = createMiddleware(async (c, next) => {
   const token = c.req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return c.json({ message: "No token provided" }, 401);
 
@@ -15,14 +14,4 @@ export async function validateToken(c: Context, next: Next) {
 
   c.set("user", users);
   await next();
-}
-
-export async function validateJwtToken(c: Context, next: Next) {
-  const token = c.req.header("Authorization")?.replace("Bearer ", "");
-  if (!token) return c.json({ message: "No token provided" }, 401);
-
-  const signedJwt = await verify(token, "secret");
-
-  c.set("user", signedJwt);
-  await next();
-}
+});
