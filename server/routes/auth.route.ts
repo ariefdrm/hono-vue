@@ -2,8 +2,9 @@ import { Hono } from "hono";
 import z from "zod";
 import bcrypt from "bcrypt";
 import pool from "../config/db.config";
-import { generateToken } from "../utils/generateToken";
 import { validateToken } from "../middlewares/validateToken.middleware";
+import UserService from "../services/user";
+import TokenService from "../services/token";
 
 const auth = new Hono();
 
@@ -12,7 +13,7 @@ auth.post("/register", async (c) => {
   const reqJson = await c.req.json();
 
   const schema = z.object({
-    email: z.email(),
+    email: z.email().trim(),
     password: z.string().min(5),
   });
 
@@ -22,18 +23,20 @@ auth.post("/register", async (c) => {
   const { email, password } = parsed.data;
 
   // hashing password before storing in DB
-  const hashed = await bcrypt.hash(password, 10);
+  // const hashed = await bcrypt.hash(password, 10);
 
   try {
-    const result = await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email",
-      [email, hashed],
-    );
+    // const result = await pool.query(
+    //   "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email",
+    //   [email, hashed],
+    // );
+
+    const result = await UserService.addUser(email, password);
 
     return c.json(
       {
         message: "User registered successfully",
-        data: result.rows[0],
+        data: result,
       },
       201,
     );
@@ -47,7 +50,7 @@ auth.post("/login", async (c) => {
   const body = await c.req.json();
 
   const schema = z.object({
-    email: z.email(),
+    email: z.email().trim(),
     password: z
       .string()
       .min(5, { error: "Password must be at least 5 characters long" }),
@@ -76,7 +79,7 @@ auth.post("/login", async (c) => {
     return c.json({ message: "Password is incorrect" }, 401);
   }
 
-  const token = generateToken();
+  const token = TokenService.generateToken();
 
   // update token
   await pool.query("UPDATE users SET token = $1 WHERE email = $2;", [
