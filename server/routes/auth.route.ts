@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import z from "zod";
 import bcrypt from "bcrypt";
-import pool from "../config/db.config";
 import { validateToken } from "../middlewares/validateToken.middleware";
 import UserService from "../services/user";
 import TokenService from "../services/token";
@@ -14,7 +13,10 @@ auth.post("/register", async (c) => {
 
   const schema = z.object({
     email: z.email().trim(),
-    password: z.string().min(5),
+    password: z
+      .string()
+      .min(5, { error: "Password must be at least 5 characters long" })
+      .trim(),
   });
 
   const parsed = schema.safeParse(reqJson);
@@ -22,15 +24,7 @@ auth.post("/register", async (c) => {
 
   const { email, password } = parsed.data;
 
-  // hashing password before storing in DB
-  // const hashed = await bcrypt.hash(password, 10);
-
   try {
-    // const result = await pool.query(
-    //   "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email",
-    //   [email, hashed],
-    // );
-
     const result = await UserService.addUser(email, password);
 
     return c.json(
@@ -51,9 +45,7 @@ auth.post("/login", async (c) => {
 
   const schema = z.object({
     email: z.email().trim(),
-    password: z
-      .string()
-      .min(5, { error: "Password must be at least 5 characters long" }),
+    password: z.string(),
   });
 
   const parsed = schema.safeParse(body);
@@ -63,16 +55,15 @@ auth.post("/login", async (c) => {
   const { email, password } = parsed.data;
 
   // get data from DB
-  const response = await pool.query("SELECT * FROM users WHERE email = $1;", [
-    email,
-  ]);
-  const user = response.rows[0];
-  if (!user) {
+  const response = await UserService.getUserByEmail(email);
+
+  // const user = response.rows[0];
+  if (!response) {
     return c.json({ message: "User not found" }, 401);
   }
 
   // compare password
-  const isMatch = await bcrypt.compare(password, response.rows[0].password);
+  const isMatch = await bcrypt.compare(password, response.password);
 
   // check if password is correct
   if (!isMatch) {
@@ -81,17 +72,14 @@ auth.post("/login", async (c) => {
 
   const token = TokenService.generateToken();
 
-  // update token
-  await pool.query("UPDATE users SET token = $1 WHERE email = $2;", [
-    token,
-    email,
-  ]);
+  // update token user
+  await TokenService.updateTokenUser(token, email);
 
   // return user
   return c.json({
     message: "User logged in successfully",
     data: {
-      email: response.rows[0].email,
+      email: response.email,
       token,
     },
   });
@@ -113,10 +101,10 @@ auth.delete("/logout/:email", validateToken, async (c) => {
   const { email } = parsed.data;
 
   try {
-    await pool.query("UPDATE users SET token = $1 WHERE email = $2;", [
-      null,
-      email,
-    ]);
+    /*
+     * for logout, update token to null
+     */
+    await TokenService.updateTokenUser(null, email);
 
     return c.json({ message: "User logged out successfully" }, 200);
   } catch (e: any) {

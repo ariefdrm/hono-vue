@@ -15,12 +15,21 @@ class TokenService {
   }
 
   static async updateTokenUser(
+    token: string | null,
     email: string,
-    token: string,
   ): Promise<User | null> {
     const result = await pool.query(
       "UPDATE users SET token = $1 WHERE email = $2",
       [token, email],
+    );
+
+    return result.rows[0] || null;
+  }
+
+  static async validateToken(token: string): Promise<User | null> {
+    const result = await pool.query(
+      "SELECT id, email FROM users WHERE token = $1",
+      [token],
     );
 
     return result.rows[0] || null;

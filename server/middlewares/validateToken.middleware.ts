@@ -1,17 +1,14 @@
-import pool from "../config/db.config";
 import { createMiddleware } from "hono/factory";
+import TokenService from "../services/token";
 
 export const validateToken = createMiddleware(async (c, next) => {
   const token = c.req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return c.json({ message: "No token provided" }, 401);
 
-  const result = await pool.query("SELECT * FROM USERS WHERE token = $1", [
-    token,
-  ]);
+  const result = await TokenService.validateToken(token);
 
-  const users = result.rows[0];
-  if (!users) return c.json({ message: "You don't have access" }, 401);
+  if (!result) return c.json({ message: "You don't have access" }, 401);
 
-  c.set("user", users);
+  c.set("user", result);
   await next();
 });
