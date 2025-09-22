@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import NavLink from './components/atoms/NavLink.vue'
+import { useTitle } from '@vueuse/core'
+import PageLayouts from './components/molecules/PageLayouts.vue'
+
+const title = useTitle()
+title.value = 'Arief Portfolio' // set title
+
+/* onBeforeMount(async () => {
+  await api.get('/auth/me', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      Accept: 'application/json',
+    },
+  })
+}) */
 </script>
 
 <template>
-  <nav class="fixed w-full flex justify-around items-center gap-6 p-3">
-    <p class="text-lg">ini adalah website</p>
-    <div class="flex gap-6 me-[4%]">
-      <NavLink name-path="home-page" message="Home" />
-      <NavLink name-path="home-page" message="Home" />
-      <NavLink name-path="home-page" message="Home" />
-    </div>
-    <!-- <RouterLink :to="{ name: 'login-page' }">Login</RouterLink> -->
-    <NavLink name-path="login-page" message="Login" />
-  </nav>
-
-  <RouterView class="h-screen"></RouterView>
+  <PageLayouts />
 </template>

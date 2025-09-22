@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
   const password = ref('')
   const token = localStorage.getItem('token')
 
-  async function login() {
+  async function login(): Promise<void> {
     try {
       const response = await api.post<LoginResponse>(
         '/auth/login',
@@ -28,19 +28,21 @@ export const useAuthStore = defineStore('auth', () => {
           },
         },
       )
+
+      // save token to local storage
       localStorage.setItem('token', response.data.data.token)
 
       // set email and password to empty
       email.value = ''
       password.value = ''
 
-      router.push('/')
+      router.push({ name: 'secret-page' })
     } catch (error) {
       console.error(error)
     }
   }
 
-  async function register() {
+  async function register(): Promise<void> {
     try {
       const response = await api.post<LoginResponse>(
         '/auth/register',
@@ -63,7 +65,8 @@ export const useAuthStore = defineStore('auth', () => {
 
       router.push('/login')
     } catch (error) {
-      console.error(error)
+      // console.error(error)
+      throw error
     }
   }
 

@@ -6,7 +6,7 @@ const user = useAuthStore()
 </script>
 
 <template>
-  <div class="flex justify-center items-center">
+  <div class="flex justify-center items-center h-[90vh]">
     <LoginForm
       heading-message="Login"
       submit-message="Login"

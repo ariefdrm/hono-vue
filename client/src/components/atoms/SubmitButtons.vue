@@ -2,13 +2,14 @@
 defineProps<{
   message?: string
   types?: 'button' | 'submit'
+  class?: string
 }>()
 
-defineEmits(['submit'])
+const emit = defineEmits(['click'])
 </script>
 
 <template>
-  <button @click="$emit('submit')" class="block w-full h-[60px] rounded-sm py-0.5 bg-blue-300">
-    {{ message }}
+  <button @click="emit('click')" :class="class">
+    <slot />
   </button>
 </template>

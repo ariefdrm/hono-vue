@@ -3,7 +3,7 @@ import RegisterForm from '@/components/molecules/RegisterForm.vue'
 </script>
 
 <template>
-  <form @submit.prevent="" class="flex justify-center items-center">
+  <div class="flex justify-center items-center h-[90vh]">
     <RegisterForm
       heading-message="Register"
       submit-message="Register"
@@ -12,5 +12,5 @@ import RegisterForm from '@/components/molecules/RegisterForm.vue'
       message-path="Login"
     >
     </RegisterForm>
-  </form>
+  </div>
 </template>

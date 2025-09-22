@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/user.store'
 import UserInput from '../atoms/UserInput.vue'
 import SubmitButtons from '../atoms/SubmitButtons.vue'
+import { useTitle } from '@vueuse/core'
 
 const user = useAuthStore()
 
@@ -13,11 +14,14 @@ const props = defineProps<{
   messagePath: string
 }>()
 
+const title = useTitle()
+title.value = 'login-page'
+
 const handleSubmit = async () => {
   try {
     await user.login()
   } catch (error) {
-    console.error('Login failed:', error)
+    throw new Error('Login failed. Please check your credentials.')
   }
 }
 </script>
@@ -34,8 +38,13 @@ const handleSubmit = async () => {
       <UserInput v-model:value="user.password" placeholder="Password" type="password" required />
     </div>
 
-    <SubmitButtons type="submit" :message="props.submitMessage" />
-    <p class="text-center text-lg">
+    <SubmitButtons
+      type="submit"
+      class="block w-full h-[60px] rounded-sm py-0.5 bg-stone-900 text-white"
+    >
+      {{ props.submitMessage }}
+    </SubmitButtons>
+    <p class="text-center text-lg mt-1.5">
       {{ message }}
       <RouterLink class="text-blue-300" :to="{ path: pathName }"
         >{{ messagePath }} here...</RouterLink
