@@ -2,53 +2,65 @@
 import { useAuthStore } from '@/stores/user.store'
 import UserInput from '../atoms/UserInput.vue'
 import SubmitButtons from '../atoms/SubmitButtons.vue'
+import FormLayouts from '../atoms/FormLayouts.vue'
 import { useTitle } from '@vueuse/core'
 
-const user = useAuthStore()
+const authStore = useAuthStore()
 
-const props = defineProps<{
+const {
+  headingMessage,
+  submitMessage,
+  redirectPath, // replaces "pathName"
+  infoMessage, // replaces "message"
+  redirectLabel, // replaces "messagePath"
+} = defineProps<{
   headingMessage: string
   submitMessage: string
-  pathName?: string
-  message: string
-  messagePath: string
+  redirectPath?: string
+  infoMessage: string
+  redirectLabel: string
 }>()
 
-const title = useTitle()
-title.value = 'login-page'
+useTitle('login-page')
 
 const handleSubmit = async () => {
   try {
-    await user.login()
+    await authStore.login()
   } catch (error) {
-    throw new Error('Login failed. Please check your credentials.')
+    console.error('Login failed:', error)
+    // Optional: add a user-facing message or toast notification
   }
 }
 </script>
 
 <template>
-  <form
-    class="shadow-lg rounded-md mx-1 my-8 p-10 h-[450px] w-[510px]"
-    @submit.prevent="handleSubmit"
-  >
-    <h2 class="text-5xl text-center font-semibold mb-10">{{ props.headingMessage }}</h2>
+  <FormLayouts :handle-submit="handleSubmit" :heading-message="headingMessage.toLowerCase()">
+    <template #userInput>
+      <UserInput v-model:value="authStore.email" placeholder="Email" type="email" required />
+      <UserInput
+        v-model:value="authStore.password"
+        placeholder="Password"
+        type="password"
+        required
+      />
+    </template>
 
-    <div class="flex flex-col gap-8 mb-4">
-      <UserInput v-model:value="user.email" placeholder="Email" type="email" required />
-      <UserInput v-model:value="user.password" placeholder="Password" type="password" required />
-    </div>
-
-    <SubmitButtons
-      type="submit"
-      class="block w-full h-[60px] rounded-sm py-0.5 bg-stone-900 text-white"
-    >
-      {{ props.submitMessage }}
-    </SubmitButtons>
-    <p class="text-center text-lg mt-1.5">
-      {{ message }}
-      <RouterLink class="text-blue-300" :to="{ path: pathName }"
-        >{{ messagePath }} here...</RouterLink
+    <template #submitButton>
+      <SubmitButtons
+        type="submit"
+        class="block w-full h-[50px] rounded-sm py-0.5 bg-stone-900 text-white"
       >
-    </p>
-  </form>
+        {{ submitMessage }}
+      </SubmitButtons>
+    </template>
+
+    <template #informationMsg>
+      <p class="text-center text-md mt-4">
+        {{ infoMessage }}
+        <RouterLink class="text-blue-300" :to="{ path: redirectPath }">
+          {{ redirectLabel }} here...
+        </RouterLink>
+      </p>
+    </template>
+  </FormLayouts>
 </template>

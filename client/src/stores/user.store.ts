@@ -1,5 +1,5 @@
 import router from '@/router'
-import api from '@/services/api.service'
+import axiosInstances from '@/services/api.service'
 import type User from '@/utils/user.interface'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(): Promise<void> {
     try {
-      const response = await api.post<LoginResponse>(
+      const response = await axiosInstances.post<LoginResponse>(
         '/auth/login',
         {
           email: email.value,
@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(): Promise<void> {
     try {
-      const response = await api.post<LoginResponse>(
+      const response = await axiosInstances.post<LoginResponse>(
         '/auth/register',
         {
           email: email.value,

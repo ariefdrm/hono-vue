@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about-page',
-      component: () => AboutPage,
+      component: AboutPage,
     },
     {
       path: '/secret',

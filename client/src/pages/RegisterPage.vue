@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import RegisterForm from '@/components/molecules/RegisterForm.vue'
+import { useTitle } from '@vueuse/core'
+
+const title = useTitle()
+title.value = 'register-page'
 </script>
 
 <template>
